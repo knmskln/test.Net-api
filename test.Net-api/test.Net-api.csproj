@@ -15,19 +15,6 @@
     <ItemGroup>
       <Compile Remove="Controllers\WeatherForecastController.cs" />
       <Compile Remove="WeatherForecast.cs" />
-      <Compile Remove="Entity\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <EmbeddedResource Remove="Entity\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <Content Remove="Entity\**" />
-    </ItemGroup>
-
-    <ItemGroup>
-      <None Remove="Entity\**" />
     </ItemGroup>
 
 </Project>

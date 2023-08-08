@@ -1,8 +1,8 @@
-using test.Net_api;
+using test.Net_api.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddSingleton<SpeedMonitoringSystem>();
+builder.Services.AddSingleton<SpeedRecordService>();
 builder.Services.AddControllers();
 
 builder.Services.AddEndpointsApiExplorer();

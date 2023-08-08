@@ -1,4 +1,4 @@
-﻿namespace test.Net_api.Service;
+﻿namespace test.Net_api;
 
 public class SpeedRecord
 {

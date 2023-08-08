@@ -7,9 +7,9 @@ namespace test.Net_api.Controllers;
 [ApiController]
 public class SpeedRecordController : ControllerBase
 {
-    private readonly SpeedMonitoringSystem speedMonitoringSystem;
+    private readonly SpeedRecordService speedMonitoringSystem;
 
-    public SpeedRecordController(SpeedMonitoringSystem speedMonitoringSystem)
+    public SpeedRecordController(SpeedRecordService speedMonitoringSystem)
     {
         this.speedMonitoringSystem = speedMonitoringSystem;
     }
