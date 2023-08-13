@@ -7,11 +7,11 @@ namespace test.Net_api.Controllers;
 [ApiController]
 public class SpeedRecordController : ControllerBase
 {
-    private readonly SpeedRecordService speedMonitoringSystem;
+    private readonly SpeedRecordService _speedRecordService;
 
-    public SpeedRecordController(SpeedRecordService speedMonitoringSystem)
+    public SpeedRecordController(SpeedRecordService speedRecordService)
     {
-        this.speedMonitoringSystem = speedMonitoringSystem;
+        this._speedRecordService = speedRecordService;
     }
 
     [HttpPost]
@@ -19,7 +19,7 @@ public class SpeedRecordController : ControllerBase
     {
         try
         {
-            await speedMonitoringSystem.SaveSpeedRecordAsync(speedRecord);
+            await _speedRecordService.SaveSpeedRecordAsync(speedRecord);
             return Ok("Speed record saved successfully.");
         }
         catch (Exception ex)
@@ -28,25 +28,22 @@ public class SpeedRecordController : ControllerBase
         }
     }
     
-    [HttpGet]
+    [HttpGet("minMax")]
+    [TimeRangeFilter]
     public IActionResult GetSpeedRecordsForDate(string date)
     {
         if (DateTime.TryParse(date, out DateTime requestedDate))
         {
-            var records = speedMonitoringSystem.GetSpeedRecordsForDate(requestedDate);
+            var records = _speedRecordService.GetMinMaxForDate(requestedDate);
             var speedRecords = records as SpeedRecord[] ?? records.ToArray();
             if (!speedRecords.Any())
             {
                 return NotFound($"No speed records found for date {requestedDate:yyyy-MM-dd}.");
             }
 
-            var maxSpeedRecord = speedRecords.MaxBy(r => r.Speed);
-            var minSpeedRecord = speedRecords.MinBy(r => r.Speed);
-
             return Ok(new
             {
-                MaxSpeedRecord = maxSpeedRecord,
-                MinSpeedRecord = minSpeedRecord
+                SpeedRecords = speedRecords
             });
         }
 
@@ -54,6 +51,7 @@ public class SpeedRecordController : ControllerBase
     }
     
     [HttpGet("speed-exceeded")]
+    [TimeRangeFilter]
     public IActionResult GetSpeedRecordsExceededForDate(string date, double threshold)
     {
         if (!DateTime.TryParse(date, out DateTime parsedDate))
@@ -61,15 +59,30 @@ public class SpeedRecordController : ControllerBase
             return BadRequest("Invalid date format. Please use format dd-mm-yyyy.");
         }
 
-        var records = speedMonitoringSystem.GetSpeedRecordsForDate(parsedDate)
-            .Where(record => record.Speed > threshold)
-            .ToList();
-
-        if (records.Count == 0)
-        {
-            return NotFound("No speed records found for the specified date and threshold.");
-        }
+        var records = _speedRecordService.GetSpeedRecordsForDate(parsedDate, threshold);
 
         return Ok(records);
+    }
+    
+    [HttpGet("getAll")]
+    [TimeRangeFilter]
+    public IActionResult GetAllRecords(string date)
+    {
+        if (DateTime.TryParse(date, out DateTime requestedDate))
+        {
+            var records = _speedRecordService.GetAll(requestedDate);
+            var speedRecords = records as SpeedRecord[] ?? records.ToArray();
+            if (!speedRecords.Any())
+            {
+                return NotFound($"No speed records found for date {requestedDate:yyyy-MM-dd}.");
+            }
+
+            return Ok(new
+            {
+                SpeedRecords = speedRecords
+            });
+        }
+
+        return BadRequest("Invalid date format. Please use the format yyyy-MM-dd.");
     }
 }
