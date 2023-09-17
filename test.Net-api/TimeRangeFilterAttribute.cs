@@ -7,7 +7,7 @@ namespace test.Net_api;
 public class TimeRangeFilterAttribute : ActionFilterAttribute
 {
     public TimeSpan StartTime { get; set; } = TimeSpan.FromHours(1);
-    public TimeSpan EndTime { get; set; } = TimeSpan.FromHours(18);
+    public TimeSpan EndTime { get; set; } = TimeSpan.FromHours(22);
 
     public override void OnActionExecuting(ActionExecutingContext context)
     {

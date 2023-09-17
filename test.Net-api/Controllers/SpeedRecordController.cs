@@ -27,7 +27,7 @@ public class SpeedRecordController : ControllerBase
             return StatusCode(500, $"An error occurred: {ex.Message}");
         }
     }
-    
+
     [HttpGet("minMax")]
     [TimeRangeFilter]
     public IActionResult GetSpeedRecordsForDate(string date)
@@ -63,7 +63,12 @@ public class SpeedRecordController : ControllerBase
 
         return Ok(records);
     }
-    
+
+    /// <summary>
+    /// The method allow to get all records
+    /// </summary>
+    /// <param name="date"></param>
+    /// <returns></returns>
     [HttpGet("getAll")]
     [TimeRangeFilter]
     public IActionResult GetAllRecords(string date)
@@ -79,7 +84,8 @@ public class SpeedRecordController : ControllerBase
 
             return Ok(new
             {
-                SpeedRecords = speedRecords
+                SpeedRecords = speedRecords,
+                speedRecordsTotal = speedRecords.Length
             });
         }
 
